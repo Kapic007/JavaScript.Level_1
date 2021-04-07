@@ -15,20 +15,20 @@ function prime(start, end) {
       start++;
       continue;
     }
-    while (i < start) {
+    while (i <= Math.sqrt(start)) {
       if (start % i === 0) {
         break;
       }
       i += 2;
     }
-    if (i >= start) arrPrime.push(start);
+    if (i > Math.sqrt(start)) arrPrime.push(start);
     start++;
     i = 3;
   }
   console.log(arrPrime.join(","));
   console.log(`Всего -- ${arrPrime.length} простых чисел`);
 }
-prime(0, 100);
+prime(0, 10000000);
 
 // задание №3
 // произвольный "массив-корзина"
@@ -57,6 +57,6 @@ console.log(countBasketPrice());
 for (let i = 0; i < 10; console.log(i), i++) {}
 
 // задание 5
-for (let i = 'x'; i.length <= 20; i = i + 'x') {
+for (let i = "x"; i.length <= 20; i = i + "x") {
   console.log(i);
 }
