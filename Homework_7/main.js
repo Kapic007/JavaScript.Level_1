@@ -41,6 +41,56 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
 
+  var nextBlock = document.getElementById("next");
+
+  //получаем ширину блока (зависимо от размеров наибольшей фигуры)
+  function nextBlockWidth() {
+    let max = 0;
+    FIGURES.forEach((elem) =>
+      elem["width"] > max ? (max = elem["width"]) : 0
+    );
+    return max;
+  }
+
+  nextBlock.style.width = 30 * nextBlockWidth() + "px";
+  nextBlock.style.height = 30 * nextBlockWidth() + "px";
+  var nextBlockSize = nextBlockWidth() ** 2;
+
+  //инициализируем область вывода фигуры
+  function initNextBlock() {
+    nextBlock.innerHTML = "";
+    for (let i = 0; i < nextBlockSize; i++) {
+      const cell = document.createElement("div");
+      cell.className = "next_cell";
+      nextBlock.appendChild(cell);
+    }
+  }
+  initNextBlock();
+
+  //получаем NodeList ячеек
+  var nextBlockCells = document.querySelectorAll(".next_cell");
+
+  //функция рендера следующей фигуры
+  function showNextFigure() {
+    //обнуляем стили ячеек (поскольку их не много, то сразу всех)
+    nextBlockCells.forEach((cell) => (cell.className = "next_cell"));
+    for (let i = 0; i < gameBoard.nextFigure.length; i++) {
+      //переводим координаты фигуры в систему блока 4*4
+      let idx = gameBoard.nextFigure[i];
+      idx =
+        idx < 10
+          ? idx
+          : idx < 20
+          ? idx - 10 + nextBlockWidth()
+          : idx < 30
+          ? idx - 20 + nextBlockWidth() * 2
+          : idx > 30
+          ? idx - 30 + nextBlockWidth() * 3
+          : 0;
+      nextBlockCells[idx].classList.add(gameBoard.nextColor);
+    }
+  }
+
   var gameFinished = false;
   var gamePaused = false;
   var gameInFocus = false;
@@ -58,6 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
     currentFigure: null,
     currentFigureWidth: 0,
     currentColor: "",
+    nextFigure: null,
+    nextFigureWidth: 0,
+    nextColor: "",
     currentPosition: 0,
     nextPosition: 0,
   };
@@ -92,12 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       drawFigure();
       gamePaused = false;
+      nextBlock.style.visibility = "visible";
     } else {
       clearTimeout(stepTimer);
       boardElement.style.borderColor = "green";
       gameBoard.cells.forEach((cell) => (cell.element.className = "closed"));
       console.log("Игра на паузе");
       gamePaused = true;
+      nextBlock.style.visibility = "hidden";
     }
   }
 
@@ -268,12 +323,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setNewFigure() {
-    gameBoard.currentFigureNumber = Math.floor(Math.random() * FIGURES.length);
+    if (!gameBoard.currentFigure) {
+      gameBoard.currentFigureNumber = Math.floor(
+        Math.random() * FIGURES.length
+      );
+      setNextFigure();
+    } else {
+      gameBoard.currentFigureNumber = gameBoard.nextFigureNumber;
+      setNextFigure();
+    }
     gameBoard.currentFigure = FIGURES[gameBoard.currentFigureNumber].cells;
     gameBoard.currentColor = FIGURES[gameBoard.currentFigureNumber].color;
     gameBoard.currentFigureWidth = FIGURES[gameBoard.currentFigureNumber].width;
     gameBoard.currentPosition = 4;
     gameBoard.nextPosition = gameBoard.currentPosition;
+    showNextFigure();
+  }
+
+  //генерируем следующую фигуру
+  function setNextFigure() {
+    gameBoard.nextFigureNumber = Math.floor(Math.random() * FIGURES.length);
+    gameBoard.nextFigure = FIGURES[gameBoard.nextFigureNumber].cells;
+    gameBoard.nextColor = FIGURES[gameBoard.nextFigureNumber].color;
+    gameBoard.nextFigureWidth = FIGURES[gameBoard.nextFigureNumber].width;
   }
 
   function initBoard() {
@@ -313,5 +385,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   initBoard();
+
   pauseHandler();
 });
