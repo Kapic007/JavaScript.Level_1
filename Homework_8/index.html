@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Homework_8</title>
+  </head>
+  <body>
+    <h1>Урок 8. Анонимные функции, замыкания</h1>
+    <ol class="task">
+      <li>
+        Для домашних заданий из предыдущих уроков (корзина и каталог товаров)
+        продумать, где можно применить замыкания.
+      </li>
+      <p class="answer">
+        Если я правильно понял понятие замыкания, то оно у меня может
+        присутствовать в функциях <code>catalogShow</code> и
+        <code>productsInBasket</code>. Но чтобы не терять время зря, сделал
+        небольшой рефакторинг своего кода (на вебинаре со стороны посмотрел что
+        действительно местами сложно понять код) :
+      </p>
+      <p class="answer">
+        1. Функции подсчёта цены товара и добавления товара в корзину вынес
+        отдельно. Теперь товарам добаляется одна и та же функция, а не создается
+        новая.
+      </p>
+      <p class="answer">
+        2. В функциях <code>catalogShow</code> и
+        <code>productsInBasket</code> емкие операции вынес в отдельные функции.
+      </p>
+      <p class="answer">3. Добавил еще комментариев.</p>
+      <p class="answer">
+        На мой взгляд основная причина трудности читания моего кода -- много
+        верстки в коде.
+      </p>
+      <button class="catalog_button" onclick="catalogShow()">
+        Показать каталог
+      </button>
+      <div id="catalog"></div>
+      <button class="basket_button" onclick="basketShow()">Корзина</button>
+      <div class="basket"></div>
+      <li>
+        Не выполняя кода, ответить, что выведет браузер и почему:
+        <pre>
+      if (!("a" in window)) {
+          var a = 1;
+      }
+      alert(a);</pre
+        >
+        <p class="answer">
+          Выведет <code>undefined</code>, потому что переменная
+          <code>a</code> обьявленная через <code>var a</code> "всплывает" без
+          присвоенного значения, и <code>"a" in window</code> вернет
+          <code>true</code> -- в цикл мы не зайдем.
+        </p>
+        <pre>
+      var b = function a(x) {
+          x && a(--x);
+      };
+      alert(a);</pre
+        >
+        <p class="answer">
+          Выведет <code>ReferenceError: a is not defined</code>, потому что
+          функция <code>a</code> записана внутри "функционального выражения" и
+          браузер присваивает в переменную <code>b</code> ссылку на функцию, а
+          явного обьявления функции/переменной <code>a</code> нет, по этому
+          <code>alert</code> ее не видит.
+        </p>
+        <pre>
+      function a(x) {
+          return x * 2;
+      }
+      var a;
+      alert(a);
+      </pre
+        >
+        <p class="answer">
+          Выведет саму функцию <code>a</code>, так как она записана как
+          "обьявление функции" и в процессе чтения кода браузер в первую очередь
+          производит поиск объявлений функций. Когда обнаруживает, создается
+          функция и переменной, у которой имя будет совпадать с именем функции,
+          присваивается ссылка на функцию. var не переинициализирует переменную.
+        </p>
+        <pre>
+      function b(x, y, a) {
+          arguments[2] = 10;
+          alert(a);
+      }
+      b(1, 2, 3);</pre
+        >
+        <p class="answer">
+          Выведет <code>10</code>, потому что в самой функции <code>b</code> мы
+          третьему аргументу (<code>a</code>) переприсваиваем значение.
+        </p>
+        <pre>
+      function a() {
+          alert(this);
+      }
+      a.call(null);</pre
+        >
+        <p class="answer">
+          Выведет <code>[object Window]</code> потому что <code>call()</code> у
+          функции с параметром <code>null</code> равнозначно вызову call() без
+          аргументов, то есть значения <code>null</code> и
+          <code>undefined</code> будут заменены глобальным объектом
+          <code>window</code>.
+        </p>
+      </li>
+    </ol>
+    <script src="index.js" async></script>
+  </body>
+</html>
