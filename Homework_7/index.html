@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Homework_7</title>
+    <script src="main.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <h1>Урок 7. Урок-практикум</h1>
+    <ol class="task">
+      <li>
+        Дополнить игру "Тетрис" своим функционалом по выбору: нестандартные виды
+        фигур, отображение одной или нескольких следующих фигур рядом с полем,
+        ведение и отображение таблицы рекордов.
+      </li>
+      <div id="container">
+        <div style="display: flex;">
+          <div id="board"></div>
+          <div class = "next_figure">
+            Следующая фигура ⮞
+            <div id="next"></div>
+          </div>
+        </div>
+
+        <div id="score"></div>
+        <div id="lines"></div>
+      </div>
+      <li>
+        * В реализованном ранее функционале работы с корзиной и каталогом
+        товаров, добавить возможность фильтрации товаров по какому либо
+        признаку, например по подстроке из названия или типу (потребуется
+        добавить такое поле в каталоге).
+      </li>
+      <button class="catalog_button" onclick="catalogShow()">
+        Показать каталог
+      </button>
+      <div id="catalog"></div>
+    </ol>
+    <script src="index.js" async></script>
+  </body>
+</html>
